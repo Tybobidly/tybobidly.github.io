@@ -160,9 +160,12 @@
     }
 
     .gallery-grid {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+       display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  justify-items: center;   /* centers each image in its grid cell */
+  max-width: 1000px;        /* optional: limits grid width */
+  margin: 0 auto;          /* optional: centers the grid on the page */
     }
 
     .gallery-item {
@@ -170,17 +173,17 @@
       border: 1px solid var(--sage);
       border-radius: 8px;
       background-color: var(--cream);
-      transition: transform 0.2s;
+      transition: transform 0.3s;
     }
 
     .gallery-item img {
       width: 100%;
       height: 140px;
-      object-fit: center;
+      object-fit: contain;
     }
 
     .gallery-item:hover {
-      transform: scale(1.05);
+      transform: scale(1.5);
     }
 
     #pricing {
@@ -207,11 +210,13 @@
       border-radius: 8px;
       padding: 1.5rem;
       width: 260px;
+	  transition: transform 0.3s;
       transition: box-shadow 0.2s ease;
     }
 
     .card:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	  transform: scale(1.1);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
     }
 
     .card h3 {

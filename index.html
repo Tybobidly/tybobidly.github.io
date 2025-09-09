@@ -2,434 +2,387 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Whispering Roost Homestead</title>
-
-  <!-- FAVICON -->
-  <link rel="icon" href="images/icon.png" type="image/png" />
-
-  <!-- GOOGLE FONT -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HangTime — simple password room (free hosting)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React + ReactDOM (UMD) and Babel for in-browser JSX -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>
   <style>
-    :root {
-      --cream:         #F5F0E8;
-      --warm-brown:    #8C6F4F;
-      --olive-green:   #6A7A4E;
-      --sage:          #A9B69E;
-      --text-dark:     #4B3A2F;
-      --header-height: 96px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Josefin Slab', serif;
-      background-color: var(--cream);
-      color: var(--text-dark);
-      line-height: 1.6;
-    }
-
-    img {
-      display: block;
-      max-width: 100%;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    h1, h2, h3 {
-      color: var(--warm-brown);
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      margin-bottom: 1rem;
-      color: var(--text-dark);
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    /* STICKY HEADER */
-    header {
-      position: sticky;
-      top: 0;
-      width: 100%;
-      background-color: var(--cream);
-      border-bottom: 1px solid var(--sage);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.5rem 1.5rem;
-      height: var(--header-height);
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-    }
-
-    .header-icon {
-      height: 80px;
-      width: auto;
-    }
-
-    .site-name {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-left: 0.75rem;
-      color: var(--warm-brown);
-    }
-
-    nav {
-      margin-right: 10%;
-    }
-
-    nav ul {
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    nav ul li a {
-      font-size: 1.25rem;
-      font-weight: 600;
-      padding: 0.25rem 0;
-      transition: color 0.2s;
-    }
-
-    nav ul li a:hover {
-      color: var(--olive-green);
-    }
-
-    /* BANNER AS IMAGE (full visible, limited height) */
-    .banner-container {
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .banner-container img {
-      width: 100%;
-      height: auto;
-      max-height: 50vh; /* limit banner to 50% of viewport height */
-      object-fit: contain;
-    }
-
-    /* SECTIONS (with extra spacing) */
-    section {
-      margin-top: 3rem; /* ~15% more than 2rem */
-      scroll-margin-top: var(--header-height);
-    }
-
-    #about {
-      text-align: center;
-      margin-top: 2.3rem;
-    }
-
-    #about h2 {
-      font-size: 1.75rem;
-      margin-bottom: 1rem;
-    }
-
-    #about p {
-      max-width: 800px;
-      margin: 0 auto 1.5rem;
-    }
-
-    #gallery {
-      margin-top: 3.45rem; /* ~15% more than 3rem */
-    }
-
-    #gallery h2 {
-      text-align: center;
-      font-size: 1.75rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .gallery-grid {
-       display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  justify-items: center;   /* centers each image in its grid cell */
-  max-width: 1000px;        /* optional: limits grid width */
-  margin: 0 auto;          /* optional: centers the grid on the page */
-    }
-
-    .gallery-item {
-      overflow: hidden;
-      border: 1px solid var(--sage);
-      border-radius: 8px;
-      background-color: var(--cream);
-      transition: transform 0.3s;
-    }
-
-    .gallery-item img {
-      width: 100%;
-      height: 140px;
-      object-fit: contain;
-    }
-
-    .gallery-item:hover {
-      transform: scale(1.5);
-    }
-
-    #pricing {
-      margin-top: 3.45rem;
-      text-align: center;
-    }
-
-    #pricing h2 {
-      font-size: 1.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .pricing-cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      justify-content: center;
-      margin-top: 1.5rem;
-    }
-
-    .card {
-      background-color: var(--cream);
-      border: 1px solid var(--sage);
-      border-radius: 8px;
-      padding: 1.5rem;
-      width: 260px;
-	  transition: transform 0.3s;
-      transition: box-shadow 0.2s ease;
-    }
-
-    .card:hover {
-	  transform: scale(1.1);
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
-    }
-
-    .card h3 {
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .card p {
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-    }
-
-    .card .price {
-      font-size: 1.5rem;
-      color: var(--warm-brown);
-      margin-bottom: 1rem;
-      font-weight: 700;
-    }
-
-    .card button {
-      background-color: var(--olive-green);
-      color: #fff;
-      border: none;
-      padding: 0.5rem 1rem;
-      font-size: 0.95rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .card button:hover {
-      background-color: #6a7a4e;
-    }
-
-    /* CONTACT WITH LOGO ABOVE */
-    #contact {
-      margin-top: 3.45rem;
-      text-align: center;
-    }
-
-    .contact-logo {
-      height: 90px;
-      width: auto;
-      opacity: 0.9;
-      margin: 0 auto 1.15rem; /* 15% more bottom margin */
-      display: block;
-    }
-
-    #contact h2 {
-      font-size: 1.75rem;
-      margin-bottom: 0.75rem;
-    }
-
-    #contact p {
-      margin-bottom: 1rem;
-      color: var(--text-dark);
-    }
-
-    #contact a {
-      font-weight: 600;
-      color: var(--olive-green);
-      border-bottom: 2px solid var(--olive-green);
-    }
-
-    #contact a:hover {
-      color: var(--warm-brown);
-      border-color: var(--warm-brown);
-    }
-
-    /* FOOTER */
-    footer {
-      margin-top: 4rem;
-      padding: 2rem 0;
-      text-align: center;
-      background-color: var(--cream);
-    }
-
-    /* RESPONSIVE TWEAKS */
-    @media (max-width: 768px) {
-      .banner-container img {
-        max-height: 20vh;
-      }
-
-      .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      }
-
-      .card {
-        width: 100%;
-        max-width: 300px;
-      }
-
-      .contact-logo {
-        height: 70px;
-        margin-bottom: 0.75rem;
-      }
-    }
+    html, body, #root { height: 100%; }
+    .slot-cell { min-width: 2.75rem; min-height: 2.25rem; }
   </style>
 </head>
+<body class="bg-slate-100 text-slate-800">
+  <div id="root"></div>
 
-<body>
-  <!-- HEADER: ICON + NAME + NAV (STICKY) -->
-  <header id="home">
-    <div class="header-left">
-      <img src="images/icon.png" alt="Whispering Roost Icon" class="header-icon" />
-      <span class="site-name">Whispering Roost</span>
-    </div>
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
 
-    <nav>
-      <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#gallery">Gallery</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+    // ============================
+    // CONFIG (saved in localStorage)
+    // ============================
+    const defaultFirebaseConfig = {
+      apiKey: localStorage.getItem('FB_apiKey') || 'YOUR_API_KEY',
+      authDomain: localStorage.getItem('FB_authDomain') || 'YOUR_PROJECT.firebaseapp.com',
+      projectId: localStorage.getItem('FB_projectId') || 'YOUR_PROJECT_ID',
+    };
 
-  <!-- BANNER AS IMAGE -->
-  <div class="banner-container">
-    <img src="images/banner.png" alt="Whispering Roost Banner" />
-  </div>
+    const HOURS = Array.from({length: 12}, (_,i) => 9 + i); // 9am-8pm
+    const DAYS_AHEAD = 7;
 
-  <!-- ABOUT SECTION -->
-  <section id="about">
-    <div class="container">
-      <h2>About Us</h2>
-      <p>
-        Welcome to Whispering Roost Homestead—our family-run chicken farm in rural
-        North Carolina. We raise heritage-breed hens on open pasture, hand-collect
-        fresh eggs, and care deeply about sustainable farming. Every rooster, hen,
-        and chick is part of the family.
-      </p>
-      <p>
-        From offering day-old chicks to sharing tips on coop design, our goal is
-        to keep things honest, simple, and community-focused. Come see how we
-        whisper to our roosters and watch our hens roam free.
-      </p>
-    </div>
-  </section>
+    // ============================
+    // FIREBASE INIT (Anonymous auth)
+    // ============================
+    let app, auth, db;
+    function ensureFirebase() {
+      if (!app) {
+        app = firebase.initializeApp(defaultFirebaseConfig);
+        auth = firebase.auth();
+        db = firebase.firestore();
+      }
+      return { app, auth, db };
+    }
 
-  <!-- GALLERY SECTION (1–7.jpeg) -->
-  <section id="gallery">
-    <div class="container">
-      <h2>Our Gallery</h2>
-      <div class="gallery-grid">
-        <div class="gallery-item">
-          <img src="images/Silkie.png" alt="Silkie Chickens" />
+    // ============================
+    // HELPERS
+    // ============================
+    const fmtDate = (d) => d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric'});
+    const isoHour = (date, hr) => { const d = new Date(date); d.setHours(hr,0,0,0); return d.toISOString(); };
+    const makeDateRange = () => {
+      const start = new Date(); start.setHours(0,0,0,0);
+      return Array.from({length: DAYS_AHEAD}, (_,i)=>{const d=new Date(start); d.setDate(start.getDate()+i); return d;});
+    };
+
+    async function sha256(text) {
+      const enc = new TextEncoder();
+      const data = enc.encode(text);
+      const buf = await crypto.subtle.digest('SHA-256', data);
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    // ============================
+    // DATA ACCESS (rooms/{roomId}/...)
+    // ============================
+    async function signInAnon() {
+      ensureFirebase();
+      if (!auth.currentUser) {
+        await auth.signInAnonymously();
+      }
+      return auth.currentUser;
+    }
+
+    async function listEvents(roomId) {
+      const snap = await db.collection('rooms').doc(roomId).collection('events').orderBy('created_at', 'desc').get();
+      return snap.docs.map(d=>({ id: d.id, ...d.data() }));
+    }
+
+    async function createEvent(roomId, title) {
+      const ref = db.collection('rooms').doc(roomId).collection('events').doc();
+      await ref.set({ title, created_at: firebase.firestore.FieldValue.serverTimestamp() });
+      return { id: ref.id, title };
+    }
+
+    async function fetchAvailability(roomId, eventId, startDate, days) {
+      const startISO = new Date(startDate); startISO.setHours(0,0,0,0);
+      const endISO = new Date(startISO); endISO.setDate(startISO.getDate()+days);
+      const snap = await db.collection('rooms').doc(roomId).collection('events').doc(eventId)
+        .collection('availability')
+        .where('slot_ts', '>=', startISO.toISOString())
+        .where('slot_ts', '<', endISO.toISOString())
+        .get();
+      return snap.docs.map(d=>d.data());
+    }
+
+    async function toggleAvailability(roomId, eventId, slot_ts, userTag, available) {
+      const key = `${userTag}__${slot_ts}`; // unique per user+slot
+      const ref = db.collection('rooms').doc(roomId).collection('events').doc(eventId)
+        .collection('availability').doc(key);
+      await ref.set({ slot_ts, user_tag: userTag, available }, { merge: true });
+    }
+
+    // ============================
+    // UI
+    // ============================
+    function App() {
+      const [phase, setPhase] = useState('gate'); // gate | app
+      const [roomId, setRoomId] = useState('');
+      const [userTag, setUserTag] = useState(localStorage.getItem('HT_userTag')||'');
+
+      useEffect(()=>{
+        // If URL has #hash, use it as roomId
+        const h = location.hash.replace('#','').trim();
+        if (h && /^[a-f0-9]{64}$/.test(h)) setRoomId(h);
+      }, []);
+
+      return (
+        <div className="max-w-5xl mx-auto p-4">
+          <header className="flex items-center justify-between py-4">
+            <h1 className="text-2xl font-bold">HangTime</h1>
+            <EnvQuickset />
+          </header>
+          {phase==='gate' ? (
+            <Gate onEnter={({roomId:rid, userTag:ut})=>{ setRoomId(rid); setUserTag(ut); setPhase('app'); }} />
+          ) : (
+            <Main roomId={roomId} userTag={userTag} />
+          )}
         </div>
-        <div class="gallery-item">
-          <img src="images/Serama.png" alt="Serama Chickens" />
-        </div>
-        <div class="gallery-item">
-          <img src="images/Sultan.png" alt="Sultan Chickens" />
-        </div>
-      </div>
-    </div>
-  </section>
+      );
+    }
 
-  <!-- PRICING SECTION -->
-  <section id="pricing">
-    <div class="container">
-      <h2>Pricing & Packages</h2>
-      <div class="pricing-cards">
-        <div class="card">
-          <h3>Day-Old Chicks</h3>
-          <p>Heritage-breed, pasture-raised chicks ready to start your flock.</p>
-          <div class="price">$5.00 / chick</div>
-          <button>Order Now</button>
-        </div>
-        <div class="card">
-          <h3>Pullets (5–6 months)</h3>
-          <p>Started hens, just about to lay—perfect for any backyard coop.</p>
-          <div class="price">$25.00 / hen</div>
-          <button>Order Now</button>
-        </div>
-        <div class="card">
-          <h3>Fresh Eggs</h3>
-          <p>Farm-fresh brown or white eggs, gathered daily (carton of 12).</p>
-          <div class="price">$6.00 / dozen</div>
-          <button>Buy Eggs</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    function Gate({ onEnter }) {
+      const [roomName, setRoomName] = useState(localStorage.getItem('HT_roomName')||'Friends');
+      const [password, setPassword] = useState('');
+      const [userTag, setUserTag] = useState(localStorage.getItem('HT_userTag')||'Tyler');
+      const [error, setError] = useState('');
 
-  <!-- CONTACT SECTION (LOGO ABOVE HEADING) -->
-  <section id="contact">
-    <div class="container">
-      <img class="contact-logo" src="images/logo.png" alt="Whispering Roost Homestead Logo" />
-      <h2>Get in Touch</h2>
-      <p>
-        Have questions? Want to schedule a farm visit or place a bulk order?
-        We’d love to hear from you.
-      </p>
-      <p>
-        Email us at
-        <a href="mailto:info@whisperingroosthomestead.com">
-          info@whisperingroosthomestead.com
-        </a>
-      </p>
-      <p>Or call: (555) 123-4567</p>
-      <p>Follow us on social media for daily farm updates:</p>
-      <p>
-        <a href="#" style="margin-right: 1rem;">Facebook</a>
-        <a href="#" style="margin-right: 1rem;">Instagram</a>
-        <a href="#">Pinterest</a>
-      </p>
-    </div>
-  </section>
+      const enter = async (e) => {
+        e.preventDefault(); setError('');
+        try {
+          const rid = await sha256(roomName + '|' + password);
+          ensureFirebase();
+          await signInAnon();
+          localStorage.setItem('HT_roomName', roomName);
+          localStorage.setItem('HT_userTag', userTag);
+          // Create the room doc if not exists (idempotent)
+          await firebase.firestore().collection('rooms').doc(rid).set({
+            created_at: firebase.firestore.FieldValue.serverTimestamp(),
+            room_name: roomName
+          }, { merge: true });
+          // Put hash in URL for easy sharing
+          location.hash = rid;
+          onEnter({ roomId: rid, userTag });
+        } catch (err) { setError(err.message); }
+      };
 
-  <!-- FOOTER -->
-  <footer></footer>
+      return (
+        <section className="bg-white rounded-2xl shadow p-4">
+          <h2 className="font-semibold mb-2">Join or create a room</h2>
+          <p className="text-sm text-slate-600 mb-4">Share the link (it includes the room code). Anyone with the link + password can enter.</p>
+          <form onSubmit={enter} className="grid gap-3 md:grid-cols-2">
+            <label className="block">
+              <span className="text-xs text-slate-500">Room name (shown in UI)</span>
+              <input className="w-full border rounded-xl px-3 py-2" value={roomName} onChange={e=>setRoomName(e.target.value)} required />
+            </label>
+            <label className="block">
+              <span className="text-xs text-slate-500">Room password</span>
+              <input className="w-full border rounded-xl px-3 py-2" value={password} onChange={e=>setPassword(e.target.value)} type="password" required />
+            </label>
+            <label className="block md:col-span-2">
+              <span className="text-xs text-slate-500">Your name (shows on grid)</span>
+              <input className="w-full border rounded-xl px-3 py-2" value={userTag} onChange={e=>setUserTag(e.target.value)} required />
+            </label>
+            <div className="md:col-span-2 flex gap-2">
+              <button className="px-4 py-2 rounded-xl bg-indigo-600 text-white">Enter</button>
+              {error && <div className="text-red-600 text-sm">{error}</div>}
+            </div>
+          </form>
+        </section>
+      );
+    }
+
+    function Main({ roomId, userTag }) {
+      const [events, setEvents] = useState([]);
+      const [title, setTitle] = useState('Movie night');
+      const [loading, setLoading] = useState(true);
+
+      const load = async () => {
+        await signInAnon();
+        const ev = await listEvents(roomId);
+        setEvents(ev);
+        setLoading(false);
+      };
+      useEffect(()=>{ load(); }, [roomId]);
+
+      const onCreate = async (e) => {
+        e.preventDefault();
+        const ev = await createEvent(roomId, title || 'New hangout');
+        setEvents(prev=>[ev, ...prev]);
+        setTitle('');
+      };
+
+      return (
+        <>
+          <section className="bg-white rounded-2xl shadow p-4 mb-6">
+            <h2 className="font-semibold mb-2">Create a new hangout</h2>
+            <form onSubmit={onCreate} className="flex gap-2">
+              <input value={title} onChange={e=>setTitle(e.target.value)} className="flex-1 border rounded-xl px-3 py-2" placeholder="Game night, brunch, hiking…" />
+              <button className="px-4 py-2 rounded-xl bg-indigo-600 text-white">Create</button>
+            </form>
+          </section>
+
+          {loading ? <div>Loading…</div> : (
+            <section className="grid md:grid-cols-2 gap-4">
+              {events.length===0 && <div className="text-slate-600">No events yet. Create one above.</div>}
+              {events.map(ev => <EventCard key={ev.id} roomId={roomId} userTag={userTag} ev={ev} />)}
+            </section>
+          )}
+        </>
+      );
+    }
+
+    function EventCard({ roomId, userTag, ev }) {
+      const [open, setOpen] = useState(false);
+      return (
+        <div className="bg-white rounded-2xl shadow p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">{ev.title}</h3>
+            <button onClick={()=>setOpen(v=>!v)} className="text-sm underline">{open? 'Hide':'Open'}</button>
+          </div>
+          {open && <EventAvailability roomId={roomId} userTag={userTag} eventId={ev.id} />}
+        </div>
+      );
+    }
+
+    function EventAvailability({ roomId, userTag, eventId }) {
+      const days = useMemo(()=>makeDateRange(), []);
+      const [data, setData] = useState({}); // key: iso → { mine, who:Set, count }
+      const [loading, setLoading] = useState(true);
+
+      const load = async () => {
+        setLoading(true);
+        const rows = await fetchAvailability(roomId, eventId, days[0], days.length);
+        const map = {};
+        for (const d of days) for (const hr of HOURS) map[isoHour(d,hr)] = { who: new Set(), mine:false };
+        for (const r of rows) {
+          if (r.available) {
+            const k = r.slot_ts; if (!map[k]) map[k] = { who:new Set(), mine:false };
+            map[k].who.add(r.user_tag);
+            if (r.user_tag === userTag) map[k].mine = true;
+          }
+        }
+        // convert Set to count for render
+        const out = {}; Object.keys(map).forEach(k=>{ out[k] = { mine: map[k].mine, count: map[k].who.size }; });
+        setData(out); setLoading(false);
+      };
+
+      useEffect(()=>{ load(); }, [roomId, eventId]);
+
+      const toggle = async (iso) => {
+        const mine = data[iso]?.mine || false;
+        await toggleAvailability(roomId, eventId, iso, userTag, !mine);
+        setData(prev => ({ ...prev, [iso]: { mine: !mine, count: (prev[iso]?.count||0) + (!mine?1:-1) } }));
+      };
+
+      if (loading) return <div className="mt-4">Loading availability…</div>;
+
+      return (
+        <div className="overflow-auto mt-4">
+          <table className="w-full text-sm">
+            <thead>
+              <tr>
+                <th className="text-left p-2">Time</th>
+                {days.map((d,i)=>(<th key={i} className="p-2 text-left">{fmtDate(d)}</th>))}
+              </tr>
+            </thead>
+            <tbody>
+              {HOURS.map(hr => (
+                <tr key={hr}>
+                  <td className="p-2 align-top font-medium">{(hr%12)||12}{hr<12? 'am':'pm'}</td>
+                  {days.map((d,di)=>{
+                    const iso = isoHour(d, hr);
+                    const cell = data[iso] || { mine:false, count:0 };
+                    return (
+                      <td key={di} className="p-1">
+                        <button onClick={()=>toggle(iso)} className={`slot-cell w-full rounded-lg border text-xs px-2 py-2 text-center ${cell.mine? 'bg-emerald-500 text-white border-emerald-600':'bg-slate-50 hover:bg-slate-100 border-slate-300'}`} title={`Friends available: ${cell.count}`}> {cell.mine? '✓' : ''} {cell.count>0? cell.count : ''} </button>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="text-xs text-slate-500 mt-2">Click a cell to toggle your availability. Numbers show how many friends are available.</p>
+        </div>
+      );
+    }
+
+    function EnvQuickset() {
+      const [apiKey, setApiKey] = useState(localStorage.getItem('FB_apiKey')||'');
+      const [authDomain, setAuthDomain] = useState(localStorage.getItem('FB_authDomain')||'');
+      const [projectId, setProjectId] = useState(localStorage.getItem('FB_projectId')||'');
+      const save = () => { localStorage.setItem('FB_apiKey', apiKey); localStorage.setItem('FB_authDomain', authDomain); localStorage.setItem('FB_projectId', projectId); location.reload(); };
+      return (
+        <details className="text-xs">
+          <summary className="cursor-pointer">Env</summary>
+          <div className="absolute right-4 mt-2 bg-white border rounded-xl p-3 shadow w-80 z-10">
+            <label className="block mb-2">
+              <span className="text-[11px] uppercase text-slate-500">Firebase apiKey</span>
+              <input className="w-full border rounded-md px-2 py-1" value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="AIza..." />
+            </label>
+            <label className="block mb-2">
+              <span className="text-[11px] uppercase text-slate-500">authDomain</span>
+              <input className="w-full border rounded-md px-2 py-1" value={authDomain} onChange={e=>setAuthDomain(e.target.value)} placeholder="your-project.firebaseapp.com" />
+            </label>
+            <label className="block mb-2">
+              <span className="text-[11px] uppercase text-slate-500">projectId</span>
+              <input className="w-full border rounded-md px-2 py-1" value={projectId} onChange={e=>setProjectId(e.target.value)} placeholder="your-project-id" />
+            </label>
+            <button onClick={save} className="w-full rounded-md bg-slate-900 text-white py-1.5">Save & reload</button>
+          </div>
+        </details>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App/>);
+  </script>
+
+  <!-- =====================================================
+       FIREBASE: Security Rules (copy/paste in Firestore Rules)
+       =====================================================
+  rules_version = '2';
+  service cloud.firestore {
+    match /databases/{database}/documents {
+      match /rooms/{roomId} {
+        allow read, write: if request.auth != null && roomId.matches('^[a-f0-9]{64}$');
+      }
+      match /rooms/{roomId}/events/{eventId} {
+        allow read, write: if request.auth != null && roomId.matches('^[a-f0-9]{64}$');
+      }
+      match /rooms/{roomId}/events/{eventId}/availability/{slot} {
+        allow read, write: if request.auth != null && roomId.matches('^[a-f0-9]{64}$');
+      }
+    }
+  }
+  -->
+
+  <!-- =====================================================
+       HOW TO DEPLOY FOR FREE (step‑by‑step)
+       =====================================================
+  1) Create a free Firebase project
+     - Go to https://console.firebase.google.com → "Add project" → enable Firestore Database.
+     - In Firestore, click Rules and paste the rules block above, then Publish.
+     - In Project Settings → Your apps → Web app: register a new app (no hosting required).
+     - Copy apiKey, authDomain, projectId and paste them into the app (top‑right Env box), then reload.
+
+  2) Host the file (pick one)
+     A) GitHub Pages (totally free):
+        • Create a GitHub account if you don't have one.
+        • New repository → name it anything → add this file as index.html (use the canvas Download, then upload).
+        • Settings → Pages → Source: "Deploy from a branch" → select main and /root → Save.
+        • After it builds, you'll get a https://USERNAME.github.io/REPO link.
+
+     B) Netlify Drop (fastest):
+        • Go to https://app.netlify.com/drop and drag the downloaded index.html file.
+        • It gives you a public URL immediately.
+
+  3) Create your room & share it
+     - Open your site. Fill Room Name + Password + Your Name → Enter.
+     - The URL will now include a long hash (after #). Copy that full URL and text it to friends.
+     - They open the link, enter the SAME password, pick their name, and they’re in.
+
+  Notes & tips
+  - No emails, no accounts: it uses Firebase anonymous login under the hood.
+  - Privacy model: the data lives under a document path derived from SHA‑256(RoomName|Password). Only people who know the password (and have the exact link) can reach it. Use a non‑trivial password.
+  - You can make multiple rooms by choosing different names or passwords; each gets its own calendar grid.
+  - To change the default hours or days, tweak HOURS/DAYS_AHEAD near the top of the script.
+  - For 30‑min slots, duplicate each hour into ":00" and ":30" in the grid logic.
+  -->
 </body>
 </html>

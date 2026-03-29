@@ -2,387 +2,2162 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HangTime — simple password room (free hosting)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- React + ReactDOM (UMD) and Babel for in-browser JSX -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Whispering Roost Homestead offers pasture-raised eggs, chicks, and started hens with a cozy coastal homestead feel." />
+  <meta name="theme-color" content="#6f8f8d" />
+  <meta name="color-scheme" content="light" />
+  <title>Whispering Roost Homestead | Coastal Homestead Eggs, Chicks & Hens</title>
+
+  <link rel="icon" href="images/icon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <style>
-    html, body, #root { height: 100%; }
-    .slot-cell { min-width: 2.75rem; min-height: 2.25rem; }
+    :root {
+      --sand-50: #fcfaf6;
+      --sand-100: #f6f0e7;
+      --sand-200: #ede2d3;
+      --sand-300: #dcc9b0;
+      --sage-500: #7c9788;
+      --sage-700: #4c665d;
+      --sea-500: #6f8f8d;
+      --sea-700: #37575b;
+      --clay-500: #b9785c;
+      --ink-900: #203033;
+      --ink-700: #425659;
+      --foam: #f8fffe;
+      --white: #ffffff;
+      --shadow-soft: 0 12px 32px rgba(35, 52, 54, 0.10);
+      --shadow-card: 0 10px 30px rgba(50, 73, 76, 0.10);
+      --shadow-strong: 0 18px 50px rgba(31, 45, 48, 0.18);
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 28px;
+      --radius-pill: 999px;
+      --content-max: 1180px;
+      --header-height: 86px;
+      --focus-ring: 0 0 0 3px rgba(111, 143, 141, 0.22);
+      --border: 1px solid rgba(55, 87, 91, 0.12);
+      --section-pad: clamp(3.5rem, 5vw, 6rem);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.8), transparent 28%),
+        linear-gradient(180deg, #fbf8f2 0%, #f5efe7 30%, #f7f4ef 100%);
+      color: var(--ink-900);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    :focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+      border-radius: 10px;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -48px;
+      left: 1rem;
+      z-index: 999;
+      padding: 0.75rem 1rem;
+      background: var(--sea-700);
+      color: var(--white);
+      border-radius: 12px;
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    .container {
+      width: min(100% - 2rem, var(--content-max));
+      margin-inline: auto;
+    }
+
+    .section-shell {
+      padding-block: var(--section-pad);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(55, 87, 91, 0.12);
+      background: rgba(255, 255, 255, 0.55);
+      color: var(--sea-700);
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+    }
+
+    .section-heading {
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+
+    .section-heading h2 {
+      margin: 0.85rem 0 0.8rem;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      line-height: 0.95;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--sea-700);
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--ink-700);
+      font-size: 1.05rem;
+      max-width: 60ch;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      min-height: var(--header-height);
+      border-bottom: 1px solid rgba(55, 87, 91, 0.12);
+      background: rgba(252, 250, 246, 0.84);
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      width: min(100% - 2rem, var(--content-max));
+      margin-inline: auto;
+      min-height: var(--header-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.9rem;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(55, 87, 91, 0.14);
+      box-shadow: var(--shadow-soft);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.95), rgba(238, 244, 240, 0.95));
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-mark .fallback {
+      position: absolute;
+      inset: 0;
+      display: none;
+      place-items: center;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--sea-700);
+      letter-spacing: 0.04em;
+    }
+
+    .brand-mark.is-fallback img {
+      display: none;
+    }
+
+    .brand-mark.is-fallback .fallback {
+      display: grid;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-title {
+      display: block;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.4rem, 2vw, 1.85rem);
+      line-height: 1;
+      font-weight: 700;
+      color: var(--sea-700);
+      white-space: nowrap;
+    }
+
+    .brand-subtitle {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--ink-700);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 0.18rem;
+      white-space: nowrap;
+    }
+
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .desktop-nav a {
+      font-weight: 600;
+      color: var(--ink-700);
+      padding: 0.4rem 0.15rem;
+      position: relative;
+    }
+
+    .desktop-nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -0.2rem;
+      height: 2px;
+      background: linear-gradient(90deg, var(--clay-500), var(--sea-500));
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.24s ease;
+    }
+
+    .desktop-nav a:hover::after,
+    .desktop-nav a:focus-visible::after {
+      transform: scaleX(1);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .button,
+    .button-secondary,
+    .button-ghost {
+      border: 0;
+      cursor: pointer;
+      border-radius: var(--radius-pill);
+      padding: 0.9rem 1.25rem;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      text-align: center;
+    }
+
+    .button {
+      color: var(--white);
+      background: linear-gradient(135deg, var(--sea-700), var(--sea-500));
+      box-shadow: 0 12px 28px rgba(55, 87, 91, 0.18);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(55, 87, 91, 0.22);
+    }
+
+    .button-secondary {
+      background: rgba(255,255,255,0.7);
+      color: var(--sea-700);
+      border: 1px solid rgba(55, 87, 91, 0.14);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .button-secondary:hover,
+    .button-secondary:focus-visible {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.95);
+    }
+
+    .button-ghost {
+      background: transparent;
+      color: var(--sea-700);
+      border: 1px solid rgba(55, 87, 91, 0.16);
+      padding-inline: 1rem;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      border: 1px solid rgba(55, 87, 91, 0.14);
+      background: rgba(255, 255, 255, 0.9);
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .menu-toggle span,
+    .menu-toggle span::before,
+    .menu-toggle span::after {
+      content: "";
+      display: block;
+      width: 20px;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--sea-700);
+      position: absolute;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .menu-toggle span::before {
+      transform: translateY(-6px);
+    }
+
+    .menu-toggle span::after {
+      transform: translateY(6px);
+    }
+
+    .menu-toggle[aria-expanded="true"] span {
+      background: transparent;
+    }
+
+    .menu-toggle[aria-expanded="true"] span::before {
+      transform: rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"] span::after {
+      transform: rotate(-45deg);
+    }
+
+    .mobile-nav-panel {
+      display: none;
+    }
+
+    .hero {
+      position: relative;
+      padding: clamp(3rem, 5vw, 5rem) 0 2rem;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(252,250,246,0.96) 0%, rgba(252,250,246,0.88) 38%, rgba(252,250,246,0.55) 62%, rgba(252,250,246,0.72) 100%),
+        url("images/banner.png") center/cover no-repeat;
+      z-index: -2;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto auto 0 0;
+      width: min(45vw, 520px);
+      height: min(36vw, 360px);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(111, 143, 141, 0.18), transparent 70%);
+      transform: translate(-18%, 22%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.8fr);
+      align-items: center;
+      gap: 2rem;
+      min-height: clamp(520px, 72vh, 700px);
+    }
+
+    .hero-copy h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(3.2rem, 8vw, 6.4rem);
+      line-height: 0.9;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      margin: 1rem 0 1rem;
+      color: var(--sea-700);
+    }
+
+    .hero-copy p {
+      font-size: 1.08rem;
+      max-width: 60ch;
+      color: var(--ink-700);
+      margin-bottom: 1.45rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-note {
+      color: var(--ink-700);
+      font-size: 0.95rem;
+    }
+
+    .hero-note strong {
+      color: var(--sea-700);
+    }
+
+    .hero-card {
+      justify-self: end;
+      width: min(100%, 420px);
+      padding: 1.35rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(55, 87, 91, 0.12);
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .hero-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-card h2 {
+      margin: 0;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2rem;
+      color: var(--sea-700);
+      line-height: 0.95;
+    }
+
+    .hero-badges,
+    .mini-points {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .hero-badge,
+    .mini-point {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+      border-radius: 18px;
+      padding: 0.95rem 1rem;
+      background: rgba(248,255,254,0.72);
+      border: 1px solid rgba(55, 87, 91, 0.10);
+    }
+
+    .hero-badge-icon,
+    .mini-point-icon {
+      width: 2.15rem;
+      height: 2.15rem;
+      border-radius: 14px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, rgba(111,143,141,0.16), rgba(185,120,92,0.08));
+      color: var(--sea-700);
+      font-weight: 700;
+    }
+
+    .hero-badge h3,
+    .mini-point h3 {
+      margin: 0 0 0.12rem;
+      font-size: 1rem;
+      color: var(--sea-700);
+    }
+
+    .hero-badge p,
+    .mini-point p {
+      margin: 0;
+      color: var(--ink-700);
+      font-size: 0.93rem;
+    }
+
+    .trust-strip {
+      padding-bottom: 2rem;
+    }
+
+    .trust-shell {
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(55, 87, 91, 0.10);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .trust-pill {
+      border-radius: var(--radius-pill);
+      padding: 0.8rem 1rem;
+      background: rgba(248,255,254,0.9);
+      color: var(--ink-700);
+      border: 1px solid rgba(55, 87, 91, 0.10);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 1.6rem;
+      align-items: start;
+    }
+
+    .card-surface {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(55, 87, 91, 0.10);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .about-card {
+      padding: 1.35rem;
+    }
+
+    .about-card p {
+      color: var(--ink-700);
+      margin-top: 0;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 0.85rem;
+      padding-left: 0;
+      margin: 1rem 0 0;
+      list-style: none;
+    }
+
+    .check-list li {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      color: var(--ink-700);
+    }
+
+    .check-list li::before {
+      content: "✓";
+      width: 1.7rem;
+      height: 1.7rem;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(111, 143, 141, 0.14);
+      color: var(--sea-700);
+      font-weight: 800;
+    }
+
+    .values-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .value-card {
+      padding: 1.2rem;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(248,255,254,0.74));
+      border: 1px solid rgba(55, 87, 91, 0.10);
+      box-shadow: var(--shadow-card);
+    }
+
+    .value-card h3 {
+      margin: 0 0 0.35rem;
+      color: var(--sea-700);
+      font-size: 1.1rem;
+    }
+
+    .value-card p {
+      margin: 0;
+      color: var(--ink-700);
+    }
+
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+    }
+
+    .offer-card {
+      padding: 1.35rem;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.80);
+      border: 1px solid rgba(55, 87, 91, 0.12);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .offer-card .tag {
+      align-self: flex-start;
+      padding: 0.42rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(111, 143, 141, 0.11);
+      color: var(--sea-700);
+      font-weight: 700;
+      font-size: 0.82rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .offer-card h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1.35rem;
+      color: var(--sea-700);
+    }
+
+    .offer-card p {
+      margin-top: 0;
+      color: var(--ink-700);
+      flex-grow: 1;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(55, 87, 91, 0.10);
+    }
+
+    .price {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--clay-500);
+      line-height: 1;
+    }
+
+    .price small {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink-700);
+    }
+
+    .order-note {
+      margin-top: 1rem;
+      color: var(--ink-700);
+      font-size: 0.96rem;
+    }
+
+    .info-band {
+      padding: 1.2rem;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(111,143,141,0.12), rgba(185,120,92,0.08));
+      border: 1px solid rgba(55, 87, 91, 0.10);
+    }
+
+    .info-band h3 {
+      margin-top: 0;
+      margin-bottom: 0.65rem;
+      color: var(--sea-700);
+      font-size: 1.25rem;
+    }
+
+    .info-band p {
+      margin: 0;
+      color: var(--ink-700);
+    }
+
+    .safety-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .safety-card {
+      padding: 1.15rem;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(55, 87, 91, 0.12);
+      box-shadow: var(--shadow-card);
+    }
+
+    .safety-card h3 {
+      margin: 0 0 0.35rem;
+      color: var(--sea-700);
+      font-size: 1.1rem;
+    }
+
+    .safety-card p {
+      margin: 0;
+      color: var(--ink-700);
+    }
+
+    .gallery-shell {
+      display: grid;
+      gap: 1.1rem;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      min-height: 240px;
+      border: 1px solid rgba(55, 87, 91, 0.10);
+      box-shadow: var(--shadow-card);
+      background: linear-gradient(180deg, rgba(255,255,255,0.74), rgba(239, 246, 244, 0.86));
+      cursor: pointer;
+    }
+
+    .gallery-item.large {
+      grid-column: span 6;
+    }
+
+    .gallery-item.medium {
+      grid-column: span 4;
+    }
+
+    .gallery-item.small {
+      grid-column: span 3;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      min-height: 240px;
+      object-fit: cover;
+      transition: transform 0.35s ease;
+    }
+
+    .gallery-item:hover img,
+    .gallery-item:focus-within img {
+      transform: scale(1.04);
+    }
+
+    .gallery-item::after {
+      content: attr(data-caption);
+      position: absolute;
+      inset: auto 1rem 1rem 1rem;
+      padding: 0.8rem 0.95rem;
+      border-radius: 18px;
+      color: var(--white);
+      background: linear-gradient(180deg, rgba(32,48,51,0.0), rgba(32,48,51,0.72));
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    .gallery-button {
+      position: absolute;
+      inset: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .image-fallback {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 1rem;
+      min-height: 240px;
+      color: var(--ink-700);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.82), rgba(237, 244, 241, 0.84));
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .process-card {
+      padding: 1.2rem;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(55,87,91,0.10);
+      box-shadow: var(--shadow-card);
+    }
+
+    .process-card .step {
+      width: 2rem;
+      height: 2rem;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      font-weight: 800;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--clay-500), var(--sea-500));
+      margin-bottom: 0.85rem;
+    }
+
+    .process-card h3 {
+      margin: 0 0 0.35rem;
+      color: var(--sea-700);
+    }
+
+    .process-card p {
+      margin: 0;
+      color: var(--ink-700);
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    details {
+      border-radius: 20px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(55,87,91,0.10);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    details summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--sea-700);
+      padding: 1rem 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details summary::after {
+      content: "+";
+      font-size: 1.2rem;
+      line-height: 1;
+      transition: transform 0.2s ease;
+    }
+
+    details[open] summary::after {
+      transform: rotate(45deg);
+    }
+
+    details .faq-answer {
+      padding: 0 1.15rem 1.1rem;
+      color: var(--ink-700);
+    }
+
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 1.2rem;
+      align-items: start;
+    }
+
+    .contact-panel,
+    .form-panel {
+      padding: 1.35rem;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(55,87,91,0.10);
+      box-shadow: var(--shadow-card);
+    }
+
+    .contact-logo {
+      width: 92px;
+      height: 92px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(241,246,242,0.96));
+      border: 1px solid rgba(55,87,91,0.12);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      place-items: center;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .contact-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .contact-logo .fallback {
+      position: absolute;
+      inset: 0;
+      display: none;
+      place-items: center;
+      color: var(--sea-700);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .contact-logo.is-fallback img {
+      display: none;
+    }
+
+    .contact-logo.is-fallback .fallback {
+      display: grid;
+    }
+
+    .contact-panel h3,
+    .form-panel h3 {
+      margin: 0 0 0.5rem;
+      color: var(--sea-700);
+      font-size: 1.4rem;
+    }
+
+    .contact-panel p,
+    .form-panel p {
+      color: var(--ink-700);
+      margin-top: 0;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .contact-item {
+      padding: 0.95rem 1rem;
+      border-radius: 18px;
+      background: rgba(248,255,254,0.78);
+      border: 1px solid rgba(55,87,91,0.10);
+    }
+
+    .contact-item strong {
+      display: block;
+      color: var(--sea-700);
+      margin-bottom: 0.22rem;
+    }
+
+    .contact-item a {
+      color: var(--ink-900);
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+    }
+
+    .social-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .social-row a {
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: rgba(248,255,254,0.85);
+      border: 1px solid rgba(55,87,91,0.10);
+      font-weight: 700;
+      color: var(--sea-700);
+    }
+
+    form {
+      display: grid;
+      gap: 0.95rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.95rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: 700;
+      color: var(--sea-700);
+      font-size: 0.95rem;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(55,87,91,0.16);
+      background: rgba(255,255,255,0.94);
+      color: var(--ink-900);
+      border-radius: 16px;
+      padding: 0.9rem 1rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #6f7f82;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(55,87,91,0.28);
+      box-shadow: var(--focus-ring);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .hint {
+      font-size: 0.88rem;
+      color: var(--ink-700);
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      height: 1px; width: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+      white-space: nowrap;
+    }
+
+    .status {
+      display: none;
+      padding: 0.9rem 1rem;
+      border-radius: 16px;
+      font-weight: 600;
+      margin-top: 0.2rem;
+    }
+
+    .status.success {
+      display: block;
+      color: #144f3d;
+      background: rgba(127, 181, 150, 0.16);
+      border: 1px solid rgba(20, 79, 61, 0.14);
+    }
+
+    .status.error {
+      display: block;
+      color: #6f2f28;
+      background: rgba(191, 98, 84, 0.14);
+      border: 1px solid rgba(111, 47, 40, 0.14);
+    }
+
+    .policy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .policy-card {
+      padding: 1.2rem;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(55,87,91,0.10);
+      box-shadow: var(--shadow-card);
+    }
+
+    .policy-card h3 {
+      margin: 0 0 0.35rem;
+      color: var(--sea-700);
+      font-size: 1.08rem;
+    }
+
+    .policy-card p {
+      margin: 0;
+      color: var(--ink-700);
+    }
+
+    .site-footer {
+      padding: 2rem 0 2.75rem;
+      background: linear-gradient(180deg, rgba(243, 236, 226, 0.48), rgba(238, 244, 241, 0.7));
+      border-top: 1px solid rgba(55,87,91,0.10);
+      margin-top: 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 0.8fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .footer-brand h3 {
+      margin: 0 0 0.5rem;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2rem;
+      line-height: 0.95;
+      color: var(--sea-700);
+    }
+
+    .footer-brand p,
+    .footer-col p,
+    .footer-col li {
+      margin: 0;
+      color: var(--ink-700);
+    }
+
+    .footer-col h4 {
+      margin: 0 0 0.7rem;
+      color: var(--sea-700);
+      font-size: 1rem;
+    }
+
+    .footer-links,
+    .footer-list {
+      display: grid;
+      gap: 0.55rem;
+      padding: 0;
+      list-style: none;
+      margin: 0;
+    }
+
+    .footer-links a {
+      color: var(--ink-700);
+    }
+
+    .footer-bottom {
+      margin-top: 1.4rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(55,87,91,0.10);
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      color: var(--ink-700);
+      font-size: 0.92rem;
+    }
+
+    .sticky-actions {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 70;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-end;
+    }
+
+    .fab {
+      border-radius: 999px;
+      padding: 0.9rem 1.05rem;
+      background: linear-gradient(135deg, var(--sea-700), var(--sea-500));
+      color: var(--white);
+      font-weight: 700;
+      box-shadow: 0 14px 24px rgba(55,87,91,0.22);
+      border: 0;
+    }
+
+    .fab.secondary {
+      background: rgba(255,255,255,0.92);
+      color: var(--sea-700);
+      border: 1px solid rgba(55,87,91,0.14);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      place-items: center;
+      padding: 1rem;
+      background: rgba(17, 28, 30, 0.84);
+      backdrop-filter: blur(8px);
+    }
+
+    .lightbox.is-open {
+      display: grid;
+    }
+
+    .lightbox-dialog {
+      position: relative;
+      width: min(92vw, 1080px);
+      max-height: 90vh;
+      border-radius: 26px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+    }
+
+    .lightbox-image-wrap {
+      background: #f0ece5;
+      min-height: 320px;
+    }
+
+    .lightbox img {
+      width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      background: #f4efe8;
+    }
+
+    .lightbox-caption {
+      padding: 1rem 1.2rem 1.2rem;
+      color: var(--ink-700);
+      background: rgba(255,255,255,0.94);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 46px;
+      height: 46px;
+      border: 0;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.92);
+      color: var(--sea-700);
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .grid-2,
+      .contact-wrap,
+      .footer-grid,
+      .offer-grid,
+      .process-grid,
+      .policy-grid,
+      .safety-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        justify-self: stretch;
+        width: 100%;
+      }
+
+      .gallery-item.large,
+      .gallery-item.medium,
+      .gallery-item.small {
+        grid-column: span 6;
+      }
+    }
+
+    @media (max-width: 820px) {
+      :root {
+        --header-height: 78px;
+      }
+
+      .desktop-nav,
+      .header-actions .button {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .mobile-nav-panel {
+        position: fixed;
+        top: calc(var(--header-height) + 0.5rem);
+        right: 1rem;
+        left: 1rem;
+        display: none;
+        padding: 1rem;
+        border-radius: 24px;
+        background: rgba(255,255,255,0.98);
+        border: 1px solid rgba(55,87,91,0.10);
+        box-shadow: var(--shadow-strong);
+        z-index: 75;
+      }
+
+      .mobile-nav-panel.is-open {
+        display: block;
+      }
+
+      .mobile-nav-panel nav {
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      .mobile-nav-panel a {
+        padding: 0.9rem 1rem;
+        border-radius: 16px;
+        font-weight: 700;
+        color: var(--sea-700);
+        background: rgba(248,255,254,0.82);
+        border: 1px solid rgba(55,87,91,0.08);
+      }
+
+      .hero {
+        padding-top: 2rem;
+      }
+
+      .hero::before {
+        background:
+          linear-gradient(180deg, rgba(252,250,246,0.96) 0%, rgba(252,250,246,0.90) 42%, rgba(252,250,246,0.82) 100%),
+          url("images/banner.png") center/cover no-repeat;
+      }
+
+      .hero-grid {
+        min-height: auto;
+      }
+
+      .gallery-item.large,
+      .gallery-item.medium,
+      .gallery-item.small {
+        grid-column: span 12;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sticky-actions {
+        right: 0.75rem;
+        bottom: 0.75rem;
+      }
+
+      .fab {
+        padding: 0.82rem 0.95rem;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .container {
+        width: min(100% - 1rem, var(--content-max));
+      }
+
+      .header-inner {
+        width: min(100% - 1rem, var(--content-max));
+      }
+
+      .brand-title {
+        white-space: normal;
+      }
+
+      .brand-subtitle {
+        display: none;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(2.8rem, 18vw, 4rem);
+      }
+
+      .section-heading h2 {
+        font-size: clamp(2.1rem, 14vw, 3.2rem);
+      }
+
+      .price-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .trust-shell {
+        justify-content: flex-start;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+      }
+    }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800">
-  <div id="root"></div>
 
-  <script type="text/babel">
-    const { useState, useEffect, useMemo } = React;
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
-    // ============================
-    // CONFIG (saved in localStorage)
-    // ============================
-    const defaultFirebaseConfig = {
-      apiKey: localStorage.getItem('FB_apiKey') || 'YOUR_API_KEY',
-      authDomain: localStorage.getItem('FB_authDomain') || 'YOUR_PROJECT.firebaseapp.com',
-      projectId: localStorage.getItem('FB_projectId') || 'YOUR_PROJECT_ID',
-    };
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="Whispering Roost Homestead home">
+        <span class="brand-mark" data-fallback="WR">
+          <img src="images/icon.png" alt="Whispering Roost Homestead icon" />
+          <span class="fallback" aria-hidden="true">WR</span>
+        </span>
+        <span class="brand-copy">
+          <span class="brand-title">Whispering Roost</span>
+          <span class="brand-subtitle">Coastal Homestead Living</span>
+        </span>
+      </a>
 
-    const HOURS = Array.from({length: 12}, (_,i) => 9 + i); // 9am-8pm
-    const DAYS_AHEAD = 7;
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="#about">About</a>
+        <a href="#offerings">Offerings</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#safety">Farm Safety</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </nav>
 
-    // ============================
-    // FIREBASE INIT (Anonymous auth)
-    // ============================
-    let app, auth, db;
-    function ensureFirebase() {
-      if (!app) {
-        app = firebase.initializeApp(defaultFirebaseConfig);
-        auth = firebase.auth();
-        db = firebase.firestore();
-      }
-      return { app, auth, db };
-    }
+      <div class="header-actions">
+        <a class="button" href="#contact">Reserve Availability</a>
+        <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+          <span></span>
+        </button>
+      </div>
+    </div>
 
-    // ============================
-    // HELPERS
-    // ============================
-    const fmtDate = (d) => d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric'});
-    const isoHour = (date, hr) => { const d = new Date(date); d.setHours(hr,0,0,0); return d.toISOString(); };
-    const makeDateRange = () => {
-      const start = new Date(); start.setHours(0,0,0,0);
-      return Array.from({length: DAYS_AHEAD}, (_,i)=>{const d=new Date(start); d.setDate(start.getDate()+i); return d;});
-    };
+    <div class="mobile-nav-panel" id="mobile-menu">
+      <nav aria-label="Mobile navigation">
+        <a href="#about">About</a>
+        <a href="#offerings">Offerings</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#process">How It Works</a>
+        <a href="#safety">Farm Safety</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
 
-    async function sha256(text) {
-      const enc = new TextEncoder();
-      const data = enc.encode(text);
-      const buf = await crypto.subtle.digest('SHA-256', data);
-      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-    }
+  <main id="main-content">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Small-batch eggs, chicks & flock starters</span>
+          <h1 id="hero-title">A chic, cozy homestead with a soft coastal soul.</h1>
+          <p>
+            Whispering Roost Homestead blends warm farm hospitality with a clean, elevated shopping experience.
+            Browse our flock offerings, request availability, and connect with confidence on any device.
+          </p>
 
-    // ============================
-    // DATA ACCESS (rooms/{roomId}/...)
-    // ============================
-    async function signInAnon() {
-      ensureFirebase();
-      if (!auth.currentUser) {
-        await auth.signInAnonymously();
-      }
-      return auth.currentUser;
-    }
+          <div class="hero-actions">
+            <a class="button" href="#offerings">View Offerings</a>
+            <a class="button-secondary" href="#contact">Ask About Availability</a>
+          </div>
 
-    async function listEvents(roomId) {
-      const snap = await db.collection('rooms').doc(roomId).collection('events').orderBy('created_at', 'desc').get();
-      return snap.docs.map(d=>({ id: d.id, ...d.data() }));
-    }
-
-    async function createEvent(roomId, title) {
-      const ref = db.collection('rooms').doc(roomId).collection('events').doc();
-      await ref.set({ title, created_at: firebase.firestore.FieldValue.serverTimestamp() });
-      return { id: ref.id, title };
-    }
-
-    async function fetchAvailability(roomId, eventId, startDate, days) {
-      const startISO = new Date(startDate); startISO.setHours(0,0,0,0);
-      const endISO = new Date(startISO); endISO.setDate(startISO.getDate()+days);
-      const snap = await db.collection('rooms').doc(roomId).collection('events').doc(eventId)
-        .collection('availability')
-        .where('slot_ts', '>=', startISO.toISOString())
-        .where('slot_ts', '<', endISO.toISOString())
-        .get();
-      return snap.docs.map(d=>d.data());
-    }
-
-    async function toggleAvailability(roomId, eventId, slot_ts, userTag, available) {
-      const key = `${userTag}__${slot_ts}`; // unique per user+slot
-      const ref = db.collection('rooms').doc(roomId).collection('events').doc(eventId)
-        .collection('availability').doc(key);
-      await ref.set({ slot_ts, user_tag: userTag, available }, { merge: true });
-    }
-
-    // ============================
-    // UI
-    // ============================
-    function App() {
-      const [phase, setPhase] = useState('gate'); // gate | app
-      const [roomId, setRoomId] = useState('');
-      const [userTag, setUserTag] = useState(localStorage.getItem('HT_userTag')||'');
-
-      useEffect(()=>{
-        // If URL has #hash, use it as roomId
-        const h = location.hash.replace('#','').trim();
-        if (h && /^[a-f0-9]{64}$/.test(h)) setRoomId(h);
-      }, []);
-
-      return (
-        <div className="max-w-5xl mx-auto p-4">
-          <header className="flex items-center justify-between py-4">
-            <h1 className="text-2xl font-bold">HangTime</h1>
-            <EnvQuickset />
-          </header>
-          {phase==='gate' ? (
-            <Gate onEnter={({roomId:rid, userTag:ut})=>{ setRoomId(rid); setUserTag(ut); setPhase('app'); }} />
-          ) : (
-            <Main roomId={roomId} userTag={userTag} />
-          )}
+          <p class="hero-note">
+            <strong>Good to know:</strong> product availability changes seasonally, farm visits are by appointment,
+            and biosecurity guidelines help keep every bird safe.
+          </p>
         </div>
-      );
-    }
 
-    function Gate({ onEnter }) {
-      const [roomName, setRoomName] = useState(localStorage.getItem('HT_roomName')||'Friends');
-      const [password, setPassword] = useState('');
-      const [userTag, setUserTag] = useState(localStorage.getItem('HT_userTag')||'Tyler');
-      const [error, setError] = useState('');
+        <aside class="hero-card" aria-label="Highlights">
+          <div class="hero-card-top">
+            <h2>Why customers choose Whispering Roost</h2>
+            <span class="eyebrow">Whispering Roost</span>
+          </div>
 
-      const enter = async (e) => {
-        e.preventDefault(); setError('');
-        try {
-          const rid = await sha256(roomName + '|' + password);
-          ensureFirebase();
-          await signInAnon();
-          localStorage.setItem('HT_roomName', roomName);
-          localStorage.setItem('HT_userTag', userTag);
-          // Create the room doc if not exists (idempotent)
-          await firebase.firestore().collection('rooms').doc(rid).set({
-            created_at: firebase.firestore.FieldValue.serverTimestamp(),
-            room_name: roomName
-          }, { merge: true });
-          // Put hash in URL for easy sharing
-          location.hash = rid;
-          onEnter({ roomId: rid, userTag });
-        } catch (err) { setError(err.message); }
-      };
-
-      return (
-        <section className="bg-white rounded-2xl shadow p-4">
-          <h2 className="font-semibold mb-2">Join or create a room</h2>
-          <p className="text-sm text-slate-600 mb-4">Share the link (it includes the room code). Anyone with the link + password can enter.</p>
-          <form onSubmit={enter} className="grid gap-3 md:grid-cols-2">
-            <label className="block">
-              <span className="text-xs text-slate-500">Room name (shown in UI)</span>
-              <input className="w-full border rounded-xl px-3 py-2" value={roomName} onChange={e=>setRoomName(e.target.value)} required />
-            </label>
-            <label className="block">
-              <span className="text-xs text-slate-500">Room password</span>
-              <input className="w-full border rounded-xl px-3 py-2" value={password} onChange={e=>setPassword(e.target.value)} type="password" required />
-            </label>
-            <label className="block md:col-span-2">
-              <span className="text-xs text-slate-500">Your name (shows on grid)</span>
-              <input className="w-full border rounded-xl px-3 py-2" value={userTag} onChange={e=>setUserTag(e.target.value)} required />
-            </label>
-            <div className="md:col-span-2 flex gap-2">
-              <button className="px-4 py-2 rounded-xl bg-indigo-600 text-white">Enter</button>
-              {error && <div className="text-red-600 text-sm">{error}</div>}
+          <div class="hero-badges">
+            <div class="hero-badge">
+              <div class="hero-badge-icon" aria-hidden="true">01</div>
+              <div>
+                <h3>Seasonal local availability</h3>
+                <p>Eggs, chicks, and started hens are offered based on the season, flock rhythm, and current availability.</p>
+              </div>
             </div>
-          </form>
-        </section>
-      );
-    }
+            <div class="hero-badge">
+              <div class="hero-badge-icon" aria-hidden="true">02</div>
+              <div>
+                <h3>Care-first raising</h3>
+                <p>We focus on calm handling, thoughtful flock care, and a clean, welcoming homestead environment.</p>
+              </div>
+            </div>
+            <div class="hero-badge">
+              <div class="hero-badge-icon" aria-hidden="true">03</div>
+              <div>
+                <h3>Visits by appointment</h3>
+                <p>Pickups and farm visits are coordinated ahead of time to protect the birds and keep each visit relaxed and organized.</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
 
-    function Main({ roomId, userTag }) {
-      const [events, setEvents] = useState([]);
-      const [title, setTitle] = useState('Movie night');
-      const [loading, setLoading] = useState(true);
+    <section class="trust-strip" aria-label="Business highlights">
+      <div class="container">
+        <div class="trust-shell">
+          <span class="trust-pill">Pasture-minded care</span>
+          <span class="trust-pill">By-appointment visits</span>
+          <span class="trust-pill">Seasonal availability updates</span>
+          <span class="trust-pill">Fresh local eggs</span>
+          <span class="trust-pill">Specialty flock options</span>
+          <span class="trust-pill">Pickup coordination</span>
+        </div>
+      </div>
+    </section>
 
-      const load = async () => {
-        await signInAnon();
-        const ev = await listEvents(roomId);
-        setEvents(ev);
-        setLoading(false);
-      };
-      useEffect(()=>{ load(); }, [roomId]);
+    <section class="section-shell" id="about">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">About the homestead</span>
+          <h2>Warm, honest, and beautifully simple.</h2>
+          <p>
+            Whispering Roost Homestead is a North Carolina homestead offering fresh eggs, chicks, and started hens with a calm,
+            welcoming approach rooted in everyday flock care.
+          </p>
+        </div>
 
-      const onCreate = async (e) => {
-        e.preventDefault();
-        const ev = await createEvent(roomId, title || 'New hangout');
-        setEvents(prev=>[ev, ...prev]);
-        setTitle('');
-      };
+        <div class="grid-2">
+          <article class="card-surface about-card">
+            <p>
+              Whispering Roost Homestead is a family-run farm in North Carolina focused on attentive flock care,
+              fresh eggs, and small-batch poultry offerings.
+            </p>
+            <p>
+              We believe good homestead products should feel personal, dependable, and easy to ask about, whether you are
+              building a flock, looking for fresh eggs, or checking current availability.
+            </p>
 
-      return (
-        <>
-          <section className="bg-white rounded-2xl shadow p-4 mb-6">
-            <h2 className="font-semibold mb-2">Create a new hangout</h2>
-            <form onSubmit={onCreate} className="flex gap-2">
-              <input value={title} onChange={e=>setTitle(e.target.value)} className="flex-1 border rounded-xl px-3 py-2" placeholder="Game night, brunch, hiking…" />
-              <button className="px-4 py-2 rounded-xl bg-indigo-600 text-white">Create</button>
+            <ul class="check-list">
+              <li>Fresh eggs, chicks, and started hens based on current availability</li>
+              <li>Warm, straightforward communication for local customers</li>
+              <li>Appointment-based visits that help keep the flock healthy and calm</li>
+            </ul>
+          </article>
+
+          <div class="values-grid" aria-label="Business values">
+            <div class="value-card">
+              <h3>Thoughtful flock care</h3>
+              <p>We raise and handle our birds with care, keeping the homestead calm, clean, and centered on their well-being.</p>
+            </div>
+            <div class="value-card">
+              <h3>Simple pickup process</h3>
+              <p>Customers can ask about availability, confirm details, and coordinate pickup or visits without confusion.</p>
+            </div>
+            <div class="value-card">
+              <h3>Seasonal offerings</h3>
+              <p>What is available may shift through the year, so the best way to confirm current options is to reach out directly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="offerings">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Offerings</span>
+          <h2>Simple packages with room to grow.</h2>
+          <p>
+            A small selection of homestead favorites, with availability confirmed by season and current flock.
+          </p>
+        </div>
+
+        <div class="offer-grid">
+          <article class="offer-card">
+            <span class="tag">Starter Flock</span>
+            <h3>Day-Old Chicks</h3>
+            <p>Heritage-breed and specialty chicks for customers who want to begin with young birds and grow their flock intentionally.</p>
+            <div class="price-row">
+              <div class="price">$5 <small>/ chick</small></div>
+              <a class="button-ghost" href="#contact">Request chicks</a>
+            </div>
+          </article>
+
+          <article class="offer-card">
+            <span class="tag">Ready Soon</span>
+            <h3>Pullets</h3>
+            <p>Started hens for customers who want to shortcut the early stage and move closer to a laying-ready flock.</p>
+            <div class="price-row">
+              <div class="price">$25 <small>/ hen</small></div>
+              <a class="button-ghost" href="#contact">Check current stock</a>
+            </div>
+          </article>
+
+          <article class="offer-card">
+            <span class="tag">Fresh Weekly</span>
+            <h3>Farm Eggs</h3>
+            <p>Fresh eggs gathered with care. Great for local pickup, regular buyers, and repeat customers who want a dependable source.</p>
+            <div class="price-row">
+              <div class="price">$6 <small>/ dozen</small></div>
+              <a class="button-ghost" href="#contact">Reserve eggs</a>
+            </div>
+          </article>
+        </div>
+
+        <p class="order-note">
+          Availability, color variety, and pickup timing can be confirmed through the inquiry form below.
+        </p>
+      </div>
+    </section>
+
+    <section class="section-shell" id="process">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">How it works</span>
+          <h2>From first question to pickup day.</h2>
+          <p>
+            A simple process helps make inquiries, confirmations, and visits feel easy and straightforward.
+          </p>
+        </div>
+
+        <div class="process-grid">
+          <article class="process-card">
+            <div class="step" aria-hidden="true">1</div>
+            <h3>Submit an inquiry</h3>
+            <p>Reach out about availability, quantities, questions, or preferred timing in one place.</p>
+          </article>
+          <article class="process-card">
+            <div class="step" aria-hidden="true">2</div>
+            <h3>Confirm details</h3>
+            <p>We confirm current availability, pickup details, and any visit guidance needed for the flock.</p>
+          </article>
+          <article class="process-card">
+            <div class="step" aria-hidden="true">3</div>
+            <h3>Schedule pickup or visit</h3>
+            <p>Visits and pickups are arranged ahead of time to help keep the homestead calm, safe, and well coordinated.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="gallery">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Gallery</span>
+          <h2>A closer look at life around the roost.</h2>
+          <p>
+            Take a look at the birds, the homestead, and the everyday moments that shape Whispering Roost.
+          </p>
+        </div>
+
+        <div class="gallery-shell">
+          <article class="gallery-item large" data-caption="Life around the roost">
+            <img src="images/1.jpeg" alt="Whispering Roost flock photography 1" loading="lazy" />
+            <button class="gallery-button" type="button" aria-label="Open image 1"></button>
+          </article>
+          <article class="gallery-item medium" data-caption="Soft coastal homestead moments">
+            <img src="images/2.jpeg" alt="Whispering Roost flock photography 2" loading="lazy" />
+            <button class="gallery-button" type="button" aria-label="Open image 2"></button>
+          </article>
+          <article class="gallery-item medium" data-caption="A closer look at the birds">
+            <img src="images/3.jpeg" alt="Whispering Roost flock photography 3" loading="lazy" />
+            <button class="gallery-button" type="button" aria-label="Open image 3"></button>
+          </article>
+          <article class="gallery-item small" data-caption="Daily farm details">
+            <img src="images/4.jpeg" alt="Whispering Roost flock photography 4" loading="lazy" />
+            <button class="gallery-button" type="button" aria-label="Open image 4"></button>
+          </article>
+          <article class="gallery-item small" data-caption="Grounded, honest care">
+            <img src="images/5.jpeg" alt="Whispering Roost flock photography 5" loading="lazy" />
+            <button class="gallery-button" type="button" aria-label="Open image 5"></button>
+          </article>
+          <article class="gallery-item small" data-caption="Seasonal beauty and texture">
+            <img src="images/6.jpeg" alt="Whispering Roost flock photography 6" loading="lazy" />
+            <button class="gallery-button" type="button" aria-label="Open image 6"></button>
+          </article>
+          <article class="gallery-item medium" data-caption="Moments from around the homestead">
+            <img src="images/7.jpeg" alt="Whispering Roost flock photography 7" loading="lazy" />
+            <button class="gallery-button" type="button" aria-label="Open image 7"></button>
+          </article>
+          <article class="gallery-item medium" data-caption="Local homestead life up close">
+            <img src="images/8.jpeg" alt="Whispering Roost flock photography 8" loading="lazy" />
+            <button class="gallery-button" type="button" aria-label="Open image 8"></button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="safety">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Farm safety</span>
+          <h2>Helpful guidance for safe, comfortable visits.</h2>
+          <p>
+            A few simple guidelines help protect the flock and make visits smoother for everyone.
+          </p>
+        </div>
+
+        <div class="safety-grid">
+          <article class="safety-card">
+            <h3>Appointment-first visits</h3>
+            <p>Visits should be scheduled ahead so the farm stays calm, organized, and easier to manage safely.</p>
+          </article>
+          <article class="safety-card">
+            <h3>Biosecurity awareness</h3>
+            <p>Guests should avoid recent outside poultry exposure before visiting to reduce health risks to the flock.</p>
+          </article>
+          <article class="safety-card">
+            <h3>Children supervised</h3>
+            <p>Young visitors should remain with an adult at all times around animals, equipment, and uneven ground.</p>
+          </article>
+          <article class="safety-card">
+            <h3>Clear pickup instructions</h3>
+            <p>Confirmed timing and directions help reduce confusion, traffic issues, and unnecessary disruption at the farm.</p>
+          </article>
+        </div>
+
+        <div class="info-band" style="margin-top: 1rem;">
+          <h3>Suggested visit note</h3>
+          <p>
+            For the health and safety of our birds, visits are by appointment only. Please arrive in clean footwear,
+            supervise children closely, and avoid visiting if you have had recent contact with outside poultry.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="faq">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">FAQ</span>
+          <h2>Helpful answers before you reach out.</h2>
+          <p>
+            Here are a few common questions about availability, visits, and reservations.
+          </p>
+        </div>
+
+        <div class="faq-list">
+          <details>
+            <summary>Do you offer shipping?</summary>
+            <div class="faq-answer">
+              At this time, availability is handled through local inquiry and pickup arrangements.
+            </div>
+          </details>
+
+          <details>
+            <summary>Can customers visit the farm?</summary>
+            <div class="faq-answer">
+              Yes. Farm visits are by appointment so we can protect flock routines and support biosecurity.
+            </div>
+          </details>
+
+          <details>
+            <summary>How do customers reserve chicks or eggs?</summary>
+            <div class="faq-answer">
+              They can use the inquiry form to request availability, share quantity needs, and note their preferred pickup timing.
+            </div>
+          </details>
+
+          <details>
+            <summary>Will this work on phones?</summary>
+            <div class="faq-answer">
+              Yes. You can browse offerings, view photos, and contact us easily from your phone.
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="contact">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Contact</span>
+          <h2>We’d love to hear from you.</h2>
+          <p>
+            Reach out with questions about availability, pickup timing, farm visits, or general flock information.
+          </p>
+        </div>
+
+        <div class="contact-wrap">
+          <aside class="contact-panel">
+            <div class="contact-logo" data-fallback="WR">
+              <img src="images/logo.png" alt="Whispering Roost Homestead logo" />
+              <span class="fallback" aria-hidden="true">WR</span>
+            </div>
+
+            <h3>Let’s talk availability</h3>
+            <p>
+              Reach out for flock questions, egg pickup timing, chick availability, or scheduling.
+            </p>
+
+            <div class="contact-list">
+              <div class="contact-item">
+                <strong>Email</strong>
+                <a href="mailto:info@whisperingroosthomestead.com">info@whisperingroosthomestead.com</a>
+              </div>
+
+              <div class="contact-item">
+                <strong>Phone</strong>
+                <a href="tel:+15551234567">(555) 123-4567</a>
+              </div>
+
+              <div class="contact-item">
+                <strong>Hours</strong>
+                <span>By appointment for visits and coordinated local pickup.</span>
+              </div>
+
+              <div class="contact-item">
+                <strong>Best use</strong>
+                <span>Reserve availability, ask questions, and confirm pickup details before visiting.</span>
+              </div>
+            </div>
+
+            <div class="social-row" aria-label="Social links">
+              <a href="#" target="_blank" rel="noopener noreferrer">Facebook</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">Pinterest</a>
+            </div>
+          </aside>
+
+          <section class="form-panel" aria-labelledby="form-title">
+            <h3 id="form-title">Inquiry form</h3>
+            <p>
+              This front-end form validates entries and prepares an email draft in the visitor’s default mail app.
+            </p>
+
+            <form id="contact-form" novalidate>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="name">Name</label>
+                  <input id="name" name="name" type="text" autocomplete="name" placeholder="Your full name" required />
+                </div>
+
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+                </div>
+
+                <div class="field">
+                  <label for="phone">Phone</label>
+                  <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="Best number to reach you" />
+                </div>
+
+                <div class="field">
+                  <label for="interest">Interested in</label>
+                  <select id="interest" name="interest" required>
+                    <option value="">Choose one</option>
+                    <option>Day-Old Chicks</option>
+                    <option>Pullets</option>
+                    <option>Farm Eggs</option>
+                    <option>Farm Visit</option>
+                    <option>General Question</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="quantity">Quantity</label>
+                  <input id="quantity" name="quantity" type="text" placeholder="Example: 2 dozen or 6 chicks" />
+                </div>
+
+                <div class="field">
+                  <label for="timing">Preferred timing</label>
+                  <input id="timing" name="timing" type="text" placeholder="Example: This weekend or next week" />
+                </div>
+
+                <div class="field full">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" placeholder="Tell us what you’re looking for, what questions you have, and any pickup details."></textarea>
+                </div>
+              </div>
+
+              <div class="visually-hidden" aria-hidden="true">
+                <label for="website">Leave this field empty</label>
+                <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <p class="hint">
+                We only use the information you submit to respond to your inquiry. Do not include sensitive personal or payment details in the form.
+              </p>
+
+              <button class="button" type="submit">Prepare Email Inquiry</button>
+              <div id="form-status" class="status" aria-live="polite"></div>
             </form>
           </section>
-
-          {loading ? <div>Loading…</div> : (
-            <section className="grid md:grid-cols-2 gap-4">
-              {events.length===0 && <div className="text-slate-600">No events yet. Create one above.</div>}
-              {events.map(ev => <EventCard key={ev.id} roomId={roomId} userTag={userTag} ev={ev} />)}
-            </section>
-          )}
-        </>
-      );
-    }
-
-    function EventCard({ roomId, userTag, ev }) {
-      const [open, setOpen] = useState(false);
-      return (
-        <div className="bg-white rounded-2xl shadow p-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">{ev.title}</h3>
-            <button onClick={()=>setOpen(v=>!v)} className="text-sm underline">{open? 'Hide':'Open'}</button>
-          </div>
-          {open && <EventAvailability roomId={roomId} userTag={userTag} eventId={ev.id} />}
         </div>
-      );
-    }
+      </div>
+    </section>
 
-    function EventAvailability({ roomId, userTag, eventId }) {
-      const days = useMemo(()=>makeDateRange(), []);
-      const [data, setData] = useState({}); // key: iso → { mine, who:Set, count }
-      const [loading, setLoading] = useState(true);
+    <section class="section-shell" id="policies">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Farm policies</span>
+          <h2>A few helpful notes before you contact us.</h2>
+          <p>
+            These policies help keep communication clear and visits safe for both guests and the flock.
+          </p>
+        </div>
 
-      const load = async () => {
-        setLoading(true);
-        const rows = await fetchAvailability(roomId, eventId, days[0], days.length);
-        const map = {};
-        for (const d of days) for (const hr of HOURS) map[isoHour(d,hr)] = { who: new Set(), mine:false };
-        for (const r of rows) {
-          if (r.available) {
-            const k = r.slot_ts; if (!map[k]) map[k] = { who:new Set(), mine:false };
-            map[k].who.add(r.user_tag);
-            if (r.user_tag === userTag) map[k].mine = true;
+        <div class="policy-grid">
+          <article class="policy-card">
+            <h3>Inquiry privacy</h3>
+            <p>Please do not send payment details or other sensitive personal information through the inquiry form.</p>
+          </article>
+          <article class="policy-card">
+            <h3>Visits and pickups</h3>
+            <p>Farm visits and product pickups are arranged by confirmation so timing stays smooth and the flock stays undisturbed.</p>
+          </article>
+          <article class="policy-card">
+            <h3>Availability changes</h3>
+            <p>Offerings may change by season, age group, and current flock numbers, so please check availability before visiting.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>Whispering Roost Homestead</h3>
+          <p>
+            Cozy, coastal, and grounded in care. Fresh eggs, chicks, and started hens offered with a warm homestead touch.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul class="footer-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#offerings">Offerings</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#safety">Farm Safety</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Business notes</h4>
+          <ul class="footer-list">
+            <li>Availability may change seasonally.</li>
+            <li>Visits are by appointment.</li>
+            <li>Please follow posted farm safety guidance.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Whispering Roost Homestead. All rights reserved.</span>
+        <span>North Carolina homestead offerings by availability.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="sticky-actions" aria-label="Quick actions">
+    <a class="fab secondary" href="mailto:info@whisperingroosthomestead.com">Email</a>
+    <a class="fab" href="tel:+15551234567">Call</a>
+  </div>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Gallery image viewer">
+    <div class="lightbox-dialog">
+      <button class="lightbox-close" type="button" aria-label="Close image viewer">✕</button>
+      <div class="lightbox-image-wrap">
+        <img id="lightbox-image" src="" alt="" />
+      </div>
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const body = document.body;
+      const menuToggle = document.querySelector('.menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileLinks = mobileMenu ? mobileMenu.querySelectorAll('a') : [];
+
+      if (menuToggle && mobileMenu) {
+        const closeMenu = () => {
+          menuToggle.setAttribute('aria-expanded', 'false');
+          mobileMenu.classList.remove('is-open');
+          body.classList.remove('menu-open');
+        };
+
+        const openMenu = () => {
+          menuToggle.setAttribute('aria-expanded', 'true');
+          mobileMenu.classList.add('is-open');
+          body.classList.add('menu-open');
+        };
+
+        menuToggle.addEventListener('click', () => {
+          const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+          expanded ? closeMenu() : openMenu();
+        });
+
+        mobileLinks.forEach(link => link.addEventListener('click', closeMenu));
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            closeMenu();
           }
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target) && mobileMenu.classList.contains('is-open')) {
+            closeMenu();
+          }
+        });
+      }
+
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      const imageFallbackTargets = document.querySelectorAll('[data-fallback]');
+      imageFallbackTargets.forEach((element) => {
+        const img = element.querySelector('img');
+        if (!img) return;
+        const activateFallback = () => element.classList.add('is-fallback');
+        if (img.complete && img.naturalWidth === 0) {
+          activateFallback();
         }
-        // convert Set to count for render
-        const out = {}; Object.keys(map).forEach(k=>{ out[k] = { mine: map[k].mine, count: map[k].who.size }; });
-        setData(out); setLoading(false);
-      };
+        img.addEventListener('error', activateFallback);
+      });
 
-      useEffect(()=>{ load(); }, [roomId, eventId]);
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      galleryItems.forEach((item, index) => {
+        const img = item.querySelector('img');
+        const button = item.querySelector('.gallery-button');
+        if (!img) return;
 
-      const toggle = async (iso) => {
-        const mine = data[iso]?.mine || false;
-        await toggleAvailability(roomId, eventId, iso, userTag, !mine);
-        setData(prev => ({ ...prev, [iso]: { mine: !mine, count: (prev[iso]?.count||0) + (!mine?1:-1) } }));
-      };
+        const fallback = () => {
+          item.innerHTML = '<div class="image-fallback"><div><strong>Gallery image unavailable</strong><br />Add the image file to keep this card live.</div></div>';
+        };
 
-      if (loading) return <div className="mt-4">Loading availability…</div>;
+        if (img.complete && img.naturalWidth === 0) {
+          fallback();
+          return;
+        }
 
-      return (
-        <div className="overflow-auto mt-4">
-          <table className="w-full text-sm">
-            <thead>
-              <tr>
-                <th className="text-left p-2">Time</th>
-                {days.map((d,i)=>(<th key={i} className="p-2 text-left">{fmtDate(d)}</th>))}
-              </tr>
-            </thead>
-            <tbody>
-              {HOURS.map(hr => (
-                <tr key={hr}>
-                  <td className="p-2 align-top font-medium">{(hr%12)||12}{hr<12? 'am':'pm'}</td>
-                  {days.map((d,di)=>{
-                    const iso = isoHour(d, hr);
-                    const cell = data[iso] || { mine:false, count:0 };
-                    return (
-                      <td key={di} className="p-1">
-                        <button onClick={()=>toggle(iso)} className={`slot-cell w-full rounded-lg border text-xs px-2 py-2 text-center ${cell.mine? 'bg-emerald-500 text-white border-emerald-600':'bg-slate-50 hover:bg-slate-100 border-slate-300'}`} title={`Friends available: ${cell.count}`}> {cell.mine? '✓' : ''} {cell.count>0? cell.count : ''} </button>
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="text-xs text-slate-500 mt-2">Click a cell to toggle your availability. Numbers show how many friends are available.</p>
-        </div>
-      );
-    }
+        img.addEventListener('error', fallback);
 
-    function EnvQuickset() {
-      const [apiKey, setApiKey] = useState(localStorage.getItem('FB_apiKey')||'');
-      const [authDomain, setAuthDomain] = useState(localStorage.getItem('FB_authDomain')||'');
-      const [projectId, setProjectId] = useState(localStorage.getItem('FB_projectId')||'');
-      const save = () => { localStorage.setItem('FB_apiKey', apiKey); localStorage.setItem('FB_authDomain', authDomain); localStorage.setItem('FB_projectId', projectId); location.reload(); };
-      return (
-        <details className="text-xs">
-          <summary className="cursor-pointer">Env</summary>
-          <div className="absolute right-4 mt-2 bg-white border rounded-xl p-3 shadow w-80 z-10">
-            <label className="block mb-2">
-              <span className="text-[11px] uppercase text-slate-500">Firebase apiKey</span>
-              <input className="w-full border rounded-md px-2 py-1" value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="AIza..." />
-            </label>
-            <label className="block mb-2">
-              <span className="text-[11px] uppercase text-slate-500">authDomain</span>
-              <input className="w-full border rounded-md px-2 py-1" value={authDomain} onChange={e=>setAuthDomain(e.target.value)} placeholder="your-project.firebaseapp.com" />
-            </label>
-            <label className="block mb-2">
-              <span className="text-[11px] uppercase text-slate-500">projectId</span>
-              <input className="w-full border rounded-md px-2 py-1" value={projectId} onChange={e=>setProjectId(e.target.value)} placeholder="your-project-id" />
-            </label>
-            <button onClick={save} className="w-full rounded-md bg-slate-900 text-white py-1.5">Save & reload</button>
-          </div>
-        </details>
-      );
-    }
+        if (button) {
+          button.addEventListener('click', () => openLightbox(img.getAttribute('src'), img.getAttribute('alt'), item.getAttribute('data-caption') || `Gallery image ${index + 1}`));
+        }
+      });
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App/>);
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.getElementById('lightbox-image');
+      const lightboxCaption = document.getElementById('lightbox-caption');
+      const lightboxClose = document.querySelector('.lightbox-close');
+
+      function openLightbox(src, alt, caption) {
+        if (!lightbox || !lightboxImage || !lightboxCaption) return;
+        lightboxImage.src = src;
+        lightboxImage.alt = alt || '';
+        lightboxCaption.textContent = caption || '';
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        body.classList.add('menu-open');
+        lightboxClose?.focus();
+      }
+
+      function closeLightbox() {
+        if (!lightbox || !lightboxImage) return;
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        lightboxImage.src = '';
+        body.classList.remove('menu-open');
+      }
+
+      lightboxClose?.addEventListener('click', closeLightbox);
+      lightbox?.addEventListener('click', (event) => {
+        if (event.target === lightbox) closeLightbox();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && lightbox?.classList.contains('is-open')) {
+          closeLightbox();
+        }
+      });
+
+      const form = document.getElementById('contact-form');
+      const status = document.getElementById('form-status');
+
+      if (form && status) {
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          status.className = 'status';
+          status.textContent = '';
+
+          const honeypot = document.getElementById('website')?.value.trim();
+          if (honeypot) {
+            status.className = 'status error';
+            status.textContent = 'Submission blocked.';
+            return;
+          }
+
+          const name = document.getElementById('name');
+          const email = document.getElementById('email');
+          const phone = document.getElementById('phone');
+          const interest = document.getElementById('interest');
+          const quantity = document.getElementById('quantity');
+          const timing = document.getElementById('timing');
+          const message = document.getElementById('message');
+
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          const missing = [];
+
+          if (!name.value.trim()) missing.push('name');
+          if (!email.value.trim() || !emailPattern.test(email.value.trim())) missing.push('valid email');
+          if (!interest.value.trim()) missing.push('interest');
+
+          if (missing.length) {
+            status.className = 'status error';
+            status.textContent = `Please enter: ${missing.join(', ')}.`;
+            return;
+          }
+
+          const subject = encodeURIComponent(`Website inquiry: ${interest.value}`);
+          const bodyLines = [
+            'New inquiry from Whispering Roost website',
+            '',
+            `Name: ${name.value.trim()}`,
+            `Email: ${email.value.trim()}`,
+            `Phone: ${phone.value.trim() || 'Not provided'}`,
+            `Interested in: ${interest.value}`,
+            `Quantity: ${quantity.value.trim() || 'Not provided'}`,
+            `Preferred timing: ${timing.value.trim() || 'Not provided'}`,
+            '',
+            'Message:',
+            message.value.trim() || 'No additional message provided.'
+          ];
+
+          const bodyText = encodeURIComponent(bodyLines.join('\n'));
+          window.location.href = `mailto:info@whisperingroosthomestead.com?subject=${subject}&body=${bodyText}`;
+
+          status.className = 'status success';
+          status.textContent = 'Your email draft is ready in your default mail app.';
+          form.reset();
+        });
+      }
+    })();
   </script>
-
-  <!-- =====================================================
-       FIREBASE: Security Rules (copy/paste in Firestore Rules)
-       =====================================================
-  rules_version = '2';
-  service cloud.firestore {
-    match /databases/{database}/documents {
-      match /rooms/{roomId} {
-        allow read, write: if request.auth != null && roomId.matches('^[a-f0-9]{64}$');
-      }
-      match /rooms/{roomId}/events/{eventId} {
-        allow read, write: if request.auth != null && roomId.matches('^[a-f0-9]{64}$');
-      }
-      match /rooms/{roomId}/events/{eventId}/availability/{slot} {
-        allow read, write: if request.auth != null && roomId.matches('^[a-f0-9]{64}$');
-      }
-    }
-  }
-  -->
-
-  <!-- =====================================================
-       HOW TO DEPLOY FOR FREE (step‑by‑step)
-       =====================================================
-  1) Create a free Firebase project
-     - Go to https://console.firebase.google.com → "Add project" → enable Firestore Database.
-     - In Firestore, click Rules and paste the rules block above, then Publish.
-     - In Project Settings → Your apps → Web app: register a new app (no hosting required).
-     - Copy apiKey, authDomain, projectId and paste them into the app (top‑right Env box), then reload.
-
-  2) Host the file (pick one)
-     A) GitHub Pages (totally free):
-        • Create a GitHub account if you don't have one.
-        • New repository → name it anything → add this file as index.html (use the canvas Download, then upload).
-        • Settings → Pages → Source: "Deploy from a branch" → select main and /root → Save.
-        • After it builds, you'll get a https://USERNAME.github.io/REPO link.
-
-     B) Netlify Drop (fastest):
-        • Go to https://app.netlify.com/drop and drag the downloaded index.html file.
-        • It gives you a public URL immediately.
-
-  3) Create your room & share it
-     - Open your site. Fill Room Name + Password + Your Name → Enter.
-     - The URL will now include a long hash (after #). Copy that full URL and text it to friends.
-     - They open the link, enter the SAME password, pick their name, and they’re in.
-
-  Notes & tips
-  - No emails, no accounts: it uses Firebase anonymous login under the hood.
-  - Privacy model: the data lives under a document path derived from SHA‑256(RoomName|Password). Only people who know the password (and have the exact link) can reach it. Use a non‑trivial password.
-  - You can make multiple rooms by choosing different names or passwords; each gets its own calendar grid.
-  - To change the default hours or days, tweak HOURS/DAYS_AHEAD near the top of the script.
-  - For 30‑min slots, duplicate each hour into ":00" and ":30" in the grid logic.
-  -->
 </body>
 </html>
